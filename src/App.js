@@ -9,12 +9,13 @@ function App() {
   const [user, loading, error] = useAuthState(auth);
   //
   useEffect(() => {
-    if (!loading && (error || !user)) history.push("/login");
+    if (!loading && !user) history.push("/login");
+    console.log(user);
   }, [user, loading, error, history]);
   //
   return (
     <Loader loading={loading}>
-      <h1>Hello {auth.currentUser.displayName}!</h1>
+      <h1>Hello {(user || { displayName: "" }).displayName}!</h1>
     </Loader>
   );
 }
