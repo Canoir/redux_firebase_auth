@@ -1,24 +1,21 @@
-import logo from './logo.svg';
-import './App.css';
-
+import { useEffect } from "react";
+import { useHistory } from "react-router";
+import { useAuthState } from "react-firebase-hooks/auth";
+import { auth } from "./config/firebase";
+import Loader from "./components/Loader";
+//
 function App() {
+  const history = useHistory();
+  const [user, loading, error] = useAuthState(auth);
+  //
+  useEffect(() => {
+    if (!loading && (error || !user)) history.push("/login");
+  }, [user, loading, error, history]);
+  //
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
+    <Loader loading={loading}>
+      <h1>Hello {auth.currentUser.displayName}!</h1>
+    </Loader>
   );
 }
 
